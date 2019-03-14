@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.data.domain.PageRequest.of;
+
 @Service
 public class MovieService {
 
@@ -66,5 +68,28 @@ public class MovieService {
 	public Map<String, Object>  graph(int limit) {
 		Collection<Movie> result = movieRepository.graph(limit);
 		return toD3Format(result);
+	}
+
+	/***************** Add By Mantoudev ****************/
+
+	public Movie findById(Long id) {
+		Optional<Movie> byId = movieRepository.findById(id, 0);
+		return byId.orElse(null);
+	}
+
+	public List<Movie> findAll(int page, int size) {
+		return movieRepository.findAll(of(page, size), 0).getContent();
+	}
+
+	public Movie createMovie(Movie movie) {
+		return movieRepository.save(movie);
+	}
+
+	public void updateMovie(Movie movie) {
+		movieRepository.save(movie);
+	}
+
+	public void delete(Long id) {
+		movieRepository.deleteById(id);
 	}
 }
